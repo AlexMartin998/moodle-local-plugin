@@ -26,5 +26,5 @@ function local_message_before_footer()
 {
     global $USER;
 
-    \core\notification::success('Some error message');
+    // \core\notification::success('Some error message');
 }
