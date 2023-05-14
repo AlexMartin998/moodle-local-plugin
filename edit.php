@@ -21,6 +21,7 @@
  */
 
 use local_message\form\edit;
+use local_message\manager;
 
 require_once(__DIR__ . '/../../config.php');
 
@@ -38,12 +39,8 @@ if ($mform->is_cancelled()) {
     // Go back to manage.php page
     redirect($CFG->wwwroot . '/local/message/manage.php', get_string('cancelled_form', 'local_message'));
 } else if ($fromform = $mform->get_data()) {
-    // inster in db with form data
-    $recordtoinsert = new stdClass();
-    $recordtoinsert->messagetext = $fromform->messagetext;
-    $recordtoinsert->messagetype = $fromform->messagetype;
-
-    $DB->insert_record('local_message', $recordtoinsert);
+    $manager = new manager();
+    $manager->create_message($fromform->message_text, $fromform->message_type);
 
     redirect(
         $CFG->wwwroot . '/local/message/manage.php',

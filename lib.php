@@ -20,21 +20,16 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use local_message\manager;
+
 defined('MOODLE_INTERNAL') || die();
 
 function local_message_before_footer()
 {
     global $DB, $USER;
 
-    $sql = "SELECT lm.id, lm.messagetext, lm.messagetype FROM {local_message} lm 
-    LEFT OUTER JOIN {local_message_read} lmr ON lm.id = lmr.messageid 
-    WHERE lmr.userid <> :userid OR lmr.userid IS NULL";
-
-    $params = [
-        'userid' => $USER->id,
-    ];
-
-    $messages = $DB->get_records_sql($sql, $params);
+    $manager = new manager();
+    $messages = $manager->get_messages($USER->id);
 
     foreach ($messages as $message) {
         $type = \core\output\notification::NOTIFY_INFO;
