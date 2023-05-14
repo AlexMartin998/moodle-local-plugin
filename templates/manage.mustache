@@ -40,6 +40,13 @@
                 {% comment %} id lo encontrara en message, no se pasa x contexto {% endcomment %}
                 onclick="location.href='{{editurl}}?messageid={{id}}'"
             />
+
+            <input
+                type="button"
+                class="btn btn-danger local_messageid{{id}} local_message_delete_btn"
+                data-message-id={{id}}
+                value="Delete message"
+            />
         </div>
     </div>
 {{/messages}}
