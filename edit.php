@@ -40,7 +40,8 @@ if ($mform->is_cancelled()) {
     redirect($CFG->wwwroot . '/local/message/manage.php', get_string('cancelled_form', 'local_message'));
 } else if ($fromform = $mform->get_data()) {
     $manager = new manager();
-    $manager->create_message($fromform->message_text, $fromform->message_type);
+
+    $manager->create_message($fromform->messagetext, $fromform->messagetype);
 
     redirect(
         $CFG->wwwroot . '/local/message/manage.php',

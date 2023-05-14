@@ -58,9 +58,10 @@ class manager
     {
         global $DB;
 
-        $sql = "SELECT lm.id, lm.messagetext, lm.messagetype FROM {local_message} lm 
-        LEFT OUTER JOIN {local_message_read} lmr ON lm.id = lmr.messageid 
-        WHERE lmr.userid <> :userid OR lmr.userid IS NULL";
+        $sql = "SELECT lm.id, lm.messagetext, lm.messagetype 
+            FROM {local_message} lm 
+            LEFT OUTER JOIN {local_message_read} lmr ON lm.id = lmr.messageid AND lmr.userid = :userid 
+            WHERE lmr.userid IS NULL";
 
         $params = [
             'userid' => $id,
@@ -69,5 +70,28 @@ class manager
         $messages = $DB->get_records_sql($sql, $params);
 
         return $messages;
+    }
+
+    /** Mark that a message was read by this user.
+     * @param int $message_id the message to mark as read
+     * @param int $userid the user that we are marking message read
+     * @return bool true if successful
+     */
+    public function mark_message_read($messageid, $userid): bool
+    {
+        global $DB;
+
+        // build obj to insert in db
+        $read_record = new stdClass();
+        $read_record->messageid = $messageid;
+        $read_record->userid = $userid;
+        $read_record->timeread = time();
+
+        try {
+            // false to avoid returning the id
+            return $DB->insert_record('local_message_read', $read_record, false);
+        } catch (dml_exception $e) {
+            return false;
+        }
     }
 }

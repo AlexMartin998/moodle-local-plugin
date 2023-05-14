@@ -22,6 +22,7 @@
  */
 
 use local_message\manager;
+
 global $CFG;
 require_once($CFG->dirroot . '/local/message/lib.php');
 
@@ -32,7 +33,8 @@ class local_message_manager_test extends advanced_testcase
     /**
      * Test that we can create a message.
      */
-    public function test_create_message() {
+    public function test_create_message()
+    {
         $this->resetAfterTest();
         $this->setUser(2); // mdl_user
 
@@ -52,8 +54,44 @@ class local_message_manager_test extends advanced_testcase
         $this->assertNotEmpty($messages);
         $this->assertCount(1, $messages);
         $message = array_pop($messages);
-        
+
         $this->assertEquals($textMessage, $message->messagetext);
         $this->assertEquals($type, $message->messagetype);
+    }
+
+    /**
+     * Test that we get the correct messages.
+     */
+    public function test_get_messages()
+    {
+        global $DB;
+
+        $this->resetAfterTest();
+        $this->setUser(2); // mdl_user
+
+        $manager = new manager();
+
+        $type = \core\output\notification::NOTIFY_SUCCESS;
+        $manager->create_message('Test message1', $type);
+        $manager->create_message('Test message2', $type);
+        $manager->create_message('Test message3', $type);
+
+        $messages = $DB->get_records('local_message');
+
+        foreach ($messages as $id => $message) {
+            $manager->mark_message_read($id, 1);
+        }
+
+        // admin user
+        $messagesAdmin = $manager->get_messages(2);
+        $this->assertCount(3, $messagesAdmin);
+
+        foreach ($messages as $id => $message) {
+            $manager->mark_message_read($id, 2);
+        }
+
+        // messages already read
+        $messagesAdmin = $manager->get_messages(2);
+        $this->assertCount(0, $messagesAdmin);
     }
 }

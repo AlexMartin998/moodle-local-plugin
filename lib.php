@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 function local_message_before_footer()
 {
-    global $DB, $USER;
+    global $USER;
 
     $manager = new manager();
     $messages = $manager->get_messages($USER->id);
@@ -49,13 +49,6 @@ function local_message_before_footer()
 
         \core\notification::add($message->messagetext, $type);
 
-
-        // build obj to insert in db
-        $readrecord = new stdClass();
-        $readrecord->messageid = $message->id;
-        $readrecord->userid = $USER->id;
-        $readrecord->timeread = time();
-
-        $DB->insert_record('local_message_read', $readrecord);
+        $manager->mark_message_read($message->id, $USER->id);
     }
 }
