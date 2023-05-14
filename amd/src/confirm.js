@@ -20,7 +20,40 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['jquery'], function ($) {
-  Y.log('Test');
-  Y.log($('.local_message_delete_btn'));
+define([
+  'jquery',
+  'core/modal_factory',
+  'core/str',
+  'core/modal_events',
+], function ($, ModalFactory, String, ModalEvents) {
+  const trigger = $('.local_message_delete_btn');
+
+  ModalFactory.create(
+    {
+      type: ModalFactory.types.SAVE_CANCEL,
+      title: String.get_string('delete_message', 'local_message'),
+      body: String.get_string('delete_message_confirm', 'local_message'),
+
+      // Do something before we render the modal
+      preShowCallback: function (triggerElement, modal) {
+        triggerElement = $(triggerElement);
+        const messageid = triggerElement.data('messageId');
+
+        // Set the message id in this modal.
+        modal.params = { messageid: messageid };
+        modal.setSaveButtonText(
+          String.get_string('delete_message', 'local_message')
+        );
+      },
+      large: true,
+    },
+    trigger
+  ).done(function (modal) {
+    // Do what you want with your new modal.
+    modal.getRoot().on(ModalEvents.save, function (e) {
+      e.preventDefault();
+
+      Y.log(modal.params);
+    });
+  });
 });

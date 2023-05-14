@@ -30,3 +30,6 @@ $string['message_created'] = 'You created a message with title: ';
 $string['updated_form'] = 'You updated a message with title: ';
 $string['cancelled_form'] = 'You cancelled the message form';
 $string['manage_messages'] = 'Manage messages';
+$string['delete_message'] = 'Delete message';
+$string['delete_message_confirm'] = 'Are you sure you want to delete message?';
+
