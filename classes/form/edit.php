@@ -31,7 +31,11 @@ class edit extends moodleform {
     public function definition() {
         $mform = $this->_form;
 
-        // add elements to your form.
+        // // add elements to your form.
+        // id, messagetext, messagetype tal cual in DB para q se llenen en auto
+        $mform->addElement('hidden', 'id'); // to edit in mvc
+        $mform->setType('id', PARAM_INT);
+
 		$mform->addElement('text', 'messagetext', get_string('message_label', 'local_message'));
         // set type of element.
 		$mform->setType('messagetext', PARAM_NOTAGS);

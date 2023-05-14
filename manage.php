@@ -34,7 +34,7 @@ echo $OUTPUT->header();
 
 $templatecontext = (object)[
     'messages' => array_values($messages),
-    'editurl' => new moodle_url('/local/message/edit.php')
+    'editurl' => new moodle_url('/local/message/edit.php'),
 ];
 
 // render mustache template

@@ -27,5 +27,6 @@ $string['enter_message'] = 'Please enter a message';
 $string['message_label'] = 'Messate Text';
 $string['message_type'] = 'Message Type';
 $string['message_created'] = 'You created a message with title: ';
+$string['updated_form'] = 'You updated a message with title: ';
 $string['cancelled_form'] = 'You cancelled the message form';
 $string['manage_messages'] = 'Manage messages';
