@@ -16,33 +16,26 @@
 
 /**
  * @package   local_message
+ * @category  external
  * @copyright 2023, Adrian Changalombo <your@email.address>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_message\external;
-
-use external_api;
-use external_function_parameters;
-use external_value;
-use external_description;
 use local_message\manager;
 
-require_once($CFG->libdir . 'externallib.php');
+require_once($CFG->libdir . "/externallib.php");
 
-defined('MOODLE_INTERNAL') || die();
-
-class create_groups extends external_api
+class local_message_external extends external_api
 {
     /**
      * Returns description of method parameters
      * @return external_function_parameters
      */
-    public static function delete_message_parameters(): external_function_parameters
+    public static function delete_message_parameters()
     {
-        return new external_function_parameters([
-            'courseid' => new external_value(PARAM_INT, 'id of course'),
-        ]);
+        return new external_function_parameters(
+            ['messageid' => new external_value(PARAM_INT, 'id of message')],
+        );
     }
 
     /**
@@ -51,7 +44,9 @@ class create_groups extends external_api
      */
     public static function delete_message($messageid): string
     {
-        $params = self::validate_parameters(self::delete_message_parameters(), ['messageid' => $messageid]);
+        $params = self::validate_parameters(self::delete_message_parameters(), array('messageid' => $messageid));
+
+        // require_capability('local/message:managemessages', context_system::instance());
 
         $manager = new manager();
         return $manager->delete_message($messageid);
@@ -61,8 +56,8 @@ class create_groups extends external_api
      * Returns description of method result value
      * @return external_description
      */
-    public static function delete_message_returns(): external_value
+    public static function delete_message_returns()
     {
-        return new external_value(PARAM_INT, 'True if the message was successfully deleted');
+        return new external_value(PARAM_BOOL, 'True if the message was successfully deleted.');
     }
 }

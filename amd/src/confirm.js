@@ -25,7 +25,9 @@ define([
   'core/modal_factory',
   'core/str',
   'core/modal_events',
-], function ($, ModalFactory, String, ModalEvents) {
+  'core/ajax',
+  'core/notification',
+], function ($, ModalFactory, String, ModalEvents, Ajax, Notification) {
   const trigger = $('.local_message_delete_btn');
 
   ModalFactory.create(
@@ -54,6 +56,27 @@ define([
       e.preventDefault();
 
       Y.log(modal.params);
+
+      const request = {
+        methodname: 'local_message_delete_message',
+        args: modal.params,
+      };
+
+      Ajax.call([request])[0]
+        .done(data => {
+          if (data === true) {
+            window.location.reload();
+          } else {
+            Notification.addNotification({
+              message: String.get_string(
+                'delete_message_faild',
+                'local_message'
+              ),
+              type: 'error',
+            });
+          }
+        })
+        .fail(Notification.exception);
     });
   });
 });

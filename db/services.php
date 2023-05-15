@@ -32,7 +32,7 @@ $functions = [
         'methodname' => 'delete_message',
 
         //file containing the class/external function - not required if using namespaced auto-loading classes.
-        // 'classpath' => 'local/message/externallib.php',
+        'classpath' => 'local/message/externallib.php',
 
         // A brief, human-readable, description of the web service function.
         'description' => 'Delete a message',
