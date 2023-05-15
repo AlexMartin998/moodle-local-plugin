@@ -123,4 +123,27 @@ class manager
 
         return $DB->update_record('local_message', $object);
     }
+
+    /** Delete a message and all the read history.
+     * @param $messageid
+     * @return bool
+     * @throws \dml_transaction_exception
+     * @throws dml_exception
+     */
+    public function delete_message($messageid): bool
+    {
+        global $DB;
+
+        // tansactions
+        $transaction = $DB->start_delegated_transaction();
+
+        $deleted_message = $DB->delete_records('local_message', ['id' => $messageid]);
+        $deleted_read = $DB->delete_records('local_message_read', ['id' => $messageid]);
+
+        if ($deleted_message && $deleted_read) {
+            $DB->commit_delegated_transaction($transaction);
+        }
+
+        return true;
+    }
 }
